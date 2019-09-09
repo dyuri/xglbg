@@ -4,28 +4,19 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include <stdbool.h>
 #include <sys/time.h>
 
 #include "config.h"
 
-typedef struct SongInfo {
-	pthread_t thread;
-	char artist[128];
-	char title[128];
-    int position, length;
+typedef struct ImgInfo {
+  bool newImg;
+  int width, height, nrChannels;
+  unsigned char *image;
 
-	bool newAlbumArt;
-	int width, height, nrChannels;
-	unsigned char *albumArt;
-
-    int *cont;
-} SongInfo;
+  int *cont;
+} ImgInfo;
 
 float getUnixTime();
-char *getSystemTime();
-int exec(char *cmd, char *buf, int size);
 
 #endif

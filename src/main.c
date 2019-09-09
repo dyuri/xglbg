@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     ctx->samples = 2048;
     ctx->dev = cfg.src;
     ctx->rate = 44100;
-    rend->songInfo.cont = &ctx->cont;
+    rend->imgInfo.cont = &ctx->cont;
 
     // Init pulseaudio && fft
     init_pulse(ctx);
@@ -74,10 +74,7 @@ int main(int argc, char *argv[])
         usleep(1000000 / cfg.fps);
     }
 
-	usleep(1000000 / cfg.fps);
-
-	FT_Done_Face(face);
-	FT_Done_FreeType(ft);
+    usleep(1000000 / cfg.fps);
 
     deinit_fft(ctx);
 

@@ -5,34 +5,28 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 #include "xwin.h"
 #include "utils.h"
 #include "config.h"
 
 typedef struct renderer {
-	xwin *win;
-    GLuint progID, progText;
-    GLuint audioSamples;
-    GLuint audioFFT;
-	GLXContext ctx;
+  xwin *win;
+  GLuint progID, progText;
+  GLuint audioSamples;
+  GLuint audioFFT;
+  GLXContext ctx;
 
-	GLuint albumArt;
-	SongInfo songInfo;
+  GLuint image;
+  ImgInfo imgInfo;
 } renderer;
 
 GLuint vertArray, posBuf;
 
-FT_Library ft;
-FT_Face face;
-
 typedef struct character {
-    GLuint	textureID;
-    float	sizeX, sizeY;
-    float	bearingX, bearingY;
-    GLuint	advance;
+  GLuint	textureID;
+  float	sizeX, sizeY;
+  float	bearingX, bearingY;
+  GLuint	advance;
 } character;
 
 character *characters[65536];

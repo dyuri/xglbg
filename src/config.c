@@ -9,7 +9,7 @@ void printHelp()
     printf("   -k Plasma window setup                                                   \n");
     printf("   -w Window mode                                                           \n");
     printf("   -g Window geometry WIDTHxHEIGHT (default 800x600)                        \n");
-    printf("   -o Position of window relative to top left corner TOPxLEFT (default 0x0)	\n");
+    printf("   -o Position of window relative to top left corner TOPxLEFT (default 0x0) \n");
     printf("   -t Transparency (default 0.8)                                            \n");
     printf("   -p shader name in shaders folder                                         \n");
     printf("   -f FPS (default 30)                                                      \n");
@@ -59,11 +59,11 @@ bool parseArgs(int argc, char *argv[])
                 break;
             case 'g':
                 sscanf(optarg, "%fx%f", &cfg.width, &cfg.height);
-				cfg.geometry = true;
+                cfg.geometry = true;
                 break;
             case 'o':
-				sscanf(optarg, "%fx%f", &cfg.offX, &cfg.offY);
-				cfg.geometry = true;
+                sscanf(optarg, "%fx%f", &cfg.offX, &cfg.offY);
+                cfg.geometry = true;
                 break;
             case 'p':
                 cfg.shaderName = strdup(optarg);
@@ -71,12 +71,12 @@ bool parseArgs(int argc, char *argv[])
             case 'f':
                 sscanf(optarg, "%u", &cfg.fps);
                 break;
-			case 'D':
-				cfg.dontDrawIfNoSound = true;
-				break;
-			case 'F':
-				cfg.fontName = strdup(optarg);
-				break;
+            case 'D':
+                cfg.dontDrawIfNoSound = true;
+                break;
+            case 'F':
+                cfg.fontName = strdup(optarg);
+                break;
             default:
                 return false;
                 break;
