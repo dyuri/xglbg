@@ -57,6 +57,7 @@ int main(int argc, char *argv[])
     ctx->dev = cfg.src;
     ctx->rate = 44100;
     rend->imgInfo.cont = &ctx->cont;
+    rend->imgInfo.newImg = true;
 
     // Init pulseaudio && fft
     init_pulse(ctx);

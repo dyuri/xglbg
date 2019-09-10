@@ -158,21 +158,23 @@ void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize)
   // Load album art if toggled
   if (r->imgInfo.newImg) {
     stbi_set_flip_vertically_on_load(true);
-    r->imgInfo.image = stbi_load("image.jpg", &r->imgInfo.width, &r->imgInfo.height, &r->imgInfo.nrChannels, 0);
+    r->imgInfo.image = stbi_load("image.png", &r->imgInfo.width, &r->imgInfo.height, &r->imgInfo.nrChannels, 0);
 
     if (r->imgInfo.image) {
       glActiveTexture(GL_TEXTURE2);
       glBindTexture(GL_TEXTURE_2D, r->image);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, r->imgInfo.width, r->imgInfo.height, 0, GL_RGB, GL_UNSIGNED_BYTE, r->imgInfo.image);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, r->imgInfo.width, r->imgInfo.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, r->imgInfo.image);
+      if (cfg.debug)
+        printf("Image loaded: %d:%d @%d\n", r->imgInfo.width, r->imgInfo.height, r->imgInfo.nrChannels);
     } else {
       if (cfg.debug)
-        printf("Couldn't load album art\n");
+        printf("Couldn't load image\n");
       glActiveTexture(GL_TEXTURE2);
       glBindTexture(GL_TEXTURE_2D, r->image);
 
-      unsigned char tmp[3] = {255, 255, 255};
+      unsigned char tmp[4] = {255, 255, 255, 255};
 
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, tmp);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
 
     }
 

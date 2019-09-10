@@ -16,7 +16,7 @@ uniform float time;
 uniform sampler1D samples;
 uniform sampler1D fft;
 uniform float position;
-uniform sampler2D albumArt;
+uniform sampler2D image;
 out vec4 color;
 
 void main() {
@@ -33,7 +33,7 @@ void main() {
         return;
     }
 
-	vec2 texSize = textureSize(albumArt, 0);
+	vec2 texSize = textureSize(image, 0);
     if (texSize.x > 1
      && IMAGE_X <= uuv.x && uuv.x <= IMAGE_X + IMAGE_WIDTH
      && IMAGE_Y <= uuv.y && uuv.y <= IMAGE_Y + IMAGE_HEIGHT) {
@@ -42,16 +42,16 @@ void main() {
 
         float xx = 1.0;
 
-        if (texture(albumArt, vec2(0.0)).xyz == vec3(0.0)) {
+        if (texture(image, vec2(0.0)).xyz == vec3(0.0)) {
             xx = 0.75;
         }
 
         p.y = p.y * xx + (1.0 - xx) / 2;
 		if (texSize.x == texSize.y)
-			color = texture(albumArt, p);
+			color = texture(image, p);
 		else {
 			float r = texSize.y / texSize.x * xx;
-			color = texture(albumArt, vec2(p.x * r + (1.0 - r) / 2.0, p.y));
+			color = texture(image, vec2(p.x * r + (1.0 - r) / 2.0, p.y));
 		}
 		return;
 	
