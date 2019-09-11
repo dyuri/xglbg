@@ -7,12 +7,13 @@
 #define HEIGHT          0.50
 
 #define IMAGE_X         0.10
-#define IMAGE_Y         0.33
-#define IMAGE_WIDTH     0.10
-#define IMAGE_HEIGHT    0.15
+#define IMAGE_Y         0.10
+#define IMAGE_WIDTH     0.80
+#define IMAGE_HEIGHT    0.80
 
 uniform vec2 resolution;
 uniform float time;
+uniform float dayprogress;
 uniform sampler1D samples;
 uniform sampler1D fft;
 uniform float position;
@@ -33,6 +34,7 @@ void main() {
         return;
     }
 
+  vec4 bgcolor = vec4(.0);
 	vec2 texSize = textureSize(image, 0);
     if (texSize.x > 1
      && IMAGE_X <= uuv.x && uuv.x <= IMAGE_X + IMAGE_WIDTH
@@ -48,12 +50,11 @@ void main() {
 
         p.y = p.y * xx + (1.0 - xx) / 2;
 		if (texSize.x == texSize.y)
-			color = texture(image, p);
+			bgcolor = texture(image, p);
 		else {
 			float r = texSize.y / texSize.x * xx;
-			color = texture(image, vec2(p.x * r + (1.0 - r) / 2.0, p.y));
+			bgcolor = texture(image, vec2(p.x * r + (1.0 - r) / 2.0, p.y)) * fract(dayprogress * 30);
 		}
-		return;
 	
     }
 
@@ -91,4 +92,6 @@ void main() {
 
 	if (uv.y < HEIGHT || uv.y > HEIGHT + f)
 		color = vec4(0.0);
+
+  color += bgcolor;
 }

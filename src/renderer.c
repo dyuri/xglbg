@@ -66,6 +66,10 @@ renderer *init_rend()
 
   checkErrors("Window init");
 
+  if (cfg.debug) {
+    printf("DayProgress: %f\n", getDayProgress());
+  }
+
   return r;
 }
 
@@ -185,6 +189,9 @@ void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize)
   // Set uniforms for shaders
   GLint timeLoc = glGetUniformLocation(r->progID, "time");
   if (timeLoc != -1) glUniform1f(timeLoc, getUnixTime());
+
+  GLint dayProgLoc = glGetUniformLocation(r->progID, "dayprogress");
+  if (dayProgLoc != -1) glUniform1f(dayProgLoc, getDayProgress());
 
   GLint resolutionLoc = glGetUniformLocation(r->progID, "resolution");
   if (resolutionLoc != -1) glUniform2f(resolutionLoc, (float)r->win->width, (float)r->win->height);

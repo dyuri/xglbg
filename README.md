@@ -44,7 +44,7 @@ $ ./liveW -h
      -o Starting point TOPxLEFT (default 0x0)
      -t Transparency (default 0.8)
      -p shader name in shaders folder 
-     -f FPS (default 30)       
+     -f FPS (default 30)
      -D Display only if there is sound
      -Y Use only youtube thumbnail for album art
      -s Pulseaudio device source
@@ -67,8 +67,10 @@ Second monitor: ```./liveW -g 2560x1440 -o 2560x0```
    #version 430
    uniform vec2 resolution;
    uniform float time;
+   uniform float dayprogress; // progress of day - hours, from 0.0 to 23.999*
    uniform sampler1D samples;
    uniform sampler1D fft;
+   uniform sampler2D image; // background image
    out vec4 color;
    ```
   3. Rename possible colission between variables names from above inside code in something else.
@@ -84,7 +86,3 @@ Second monitor: ```./liveW -g 2560x1440 -o 2560x0```
        - texture(fft, coordX).x;
      - otherwise
        - texture(samples, coordX).x;
-
-# Problems
-1. ft2build.h file is missing
-  ```$ sudo cp -r /usr/include/freetype2/ ..```

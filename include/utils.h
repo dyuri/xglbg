@@ -18,5 +18,6 @@ typedef struct ImgInfo {
 } ImgInfo;
 
 float getUnixTime();
+float getDayProgress();
 
 #endif
