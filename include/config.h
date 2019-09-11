@@ -2,8 +2,12 @@
 #define _CONFIG_H_
 
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <pwd.h>
 #include <stdio.h>
 
 struct config {
@@ -16,12 +20,15 @@ struct config {
     float width, height;
     float transparency;
     char *shaderName;
-    char *fontName;
     unsigned int fps;
     bool dontDrawIfNoSound;
 } cfg;
 
 void printHelp();
 bool parseArgs(int argc, char *argv[]);
+char* getHomeDir();
+char* getConfigRoot();
+char* getShaderDir();
+char* getImageDir();
 
 #endif // _CONFIG_H_

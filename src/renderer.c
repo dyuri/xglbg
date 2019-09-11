@@ -68,6 +68,7 @@ renderer *init_rend()
 
   if (cfg.debug) {
     printf("DayProgress: %f\n", getDayProgress());
+    printf("Config dir: %s\n", getConfigRoot());
   }
 
   return r;

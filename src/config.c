@@ -32,7 +32,6 @@ bool parseArgs(int argc, char *argv[])
     cfg.transparency = 0.8;
     cfg.shaderName = NULL;
     cfg.fps = 30;
-    cfg.fontName = "OpenSans.ttf";
 
     char c;
     const char *opt_str = "hdkwDYs:t:g:o:f:p:F:";
@@ -74,13 +73,54 @@ bool parseArgs(int argc, char *argv[])
             case 'D':
                 cfg.dontDrawIfNoSound = true;
                 break;
-            case 'F':
-                cfg.fontName = strdup(optarg);
-                break;
             default:
                 return false;
                 break;
         }
     }
     return true;
+}
+
+char* getHomeDir()
+{
+  char* homedir;
+  if ((homedir = getenv("HOME")) == NULL) {
+    homedir = getpwuid(getuid())->pw_dir;
+  }
+
+  return homedir;
+}
+
+char* getConfigRoot()
+{
+  char* configroot;
+
+  if ((configroot = getenv("XDG_CONFIG_HOME")) == NULL) {
+    char* home = getHomeDir();
+    char* buf = (char*)malloc((strlen(home) + strlen("/.config")) * sizeof(char));
+    sprintf(buf, "%s%s", home, "/.config"); 
+    configroot = buf;
+  }
+
+  char* configdir = (char*)malloc((strlen(configroot) + strlen("/xglbg")) * sizeof(char));
+  sprintf(configdir, "%s%s", configroot, "/xglbg");
+
+  // create if not exsists
+  struct stat st = {0};
+
+  if (stat(configdir, &st) == -1) {
+    mkdir(configdir, 0755);
+  }
+
+  return configdir;
+}
+
+char* getShaderDir()
+{
+  return getConfigRoot();
+}
+
+char* getImageDir()
+{
+  return getConfigRoot();
 }
