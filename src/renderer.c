@@ -132,19 +132,6 @@ void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize)
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  // Doesn't render if there is no sound
-  if (cfg.dontDrawIfNoSound) {
-    bool noNewSound = true;
-    for (int i = 0; i < buffSize; i++)
-      if (*(sampleBuff + i))
-        noNewSound = false;
-
-    if (noNewSound) {
-      swapBuffers(r->win);
-      return;
-    }
-  }
-
   // Configure & link opengl
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_CONSTANT_ALPHA);

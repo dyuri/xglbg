@@ -33,8 +33,8 @@ _shader_name_ is name of the shaders folder inside folder `shaders/` in root dir
 
 Example: ./liveW -s alsa_output.pci-0000_22_00.3.analog-stereo.monitor -p equalizer
 ```
-$ ./liveW -h
-  Usage: liveW <options>                                                      
+$ ./xglbg -h
+  Usage: xglbg <options>                                                      
   Options:                                                                    
      -h Print help
      -d Turn debug on
@@ -42,10 +42,10 @@ $ ./liveW -h
      -w Window mode
      -g Geometry WIDTHxHEIGHT (default 800x600) 
      -o Starting point TOPxLEFT (default 0x0)
-     -t Transparency (default 0.8)
+     -t Transparency (default 1.0)
      -p shader name in shaders folder 
      -f FPS (default 30)
-     -D Display only if there is sound
+     -D Dynamic FPS - use 1 fps if there is no sound
      -Y Use only youtube thumbnail for album art
      -s Pulseaudio device source
         Specify using the name from "pacmd list-sources | grep "name:""

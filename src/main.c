@@ -69,10 +69,26 @@ int main(int argc, char *argv[])
     // Create threads for pulseaudio & getting song info
     pthread_create(&ctx->thread, NULL, pa_fft_thread, ctx);
 
+    unsigned int fps = cfg.fps;
+
     while(ctx->cont) {
         render(rend, ctx->pa_output, ctx->fft_output, ctx->samples);
 
-        usleep(1000000 / cfg.fps);
+        // Doesn't render if there is no sound
+        if (cfg.dontDrawIfNoSound) {
+          bool noNewSound = true;
+          for (int i = 0; i < ctx->samples; i++)
+            if (*(ctx->pa_output + i))
+              noNewSound = false;
+
+          if (noNewSound) {
+            fps = 1;
+          } else {
+            fps = cfg.fps;
+          }
+        }
+
+        usleep(1000000 / fps);
     }
 
     usleep(1000000 / cfg.fps);

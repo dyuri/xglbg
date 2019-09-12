@@ -10,10 +10,10 @@ void printHelp()
     printf("   -w Window mode                                                           \n");
     printf("   -g Window geometry WIDTHxHEIGHT (default 800x600)                        \n");
     printf("   -o Position of window relative to top left corner TOPxLEFT (default 0x0) \n");
-    printf("   -t Transparency (default 0.8)                                            \n");
+    printf("   -t Transparency (default 1.0)                                            \n");
     printf("   -p shader name in shaders folder                                         \n");
     printf("   -f FPS (default 30)                                                      \n");
-    printf("   -D Don't draw if there is no sound                                       \n");
+    printf("   -D Dynamic FPS - use 1 FPS if there is no sound                          \n");
     printf("   -s Pulseaudio device source                                              \n");
     printf("      Specify using the name from \"pacmd list-sources | grep \"name:\"\"   \n");
 }
@@ -29,7 +29,7 @@ bool parseArgs(int argc, char *argv[])
     cfg.offY = 0;
     cfg.width = 800;
     cfg.height = 600;
-    cfg.transparency = 0.8;
+    cfg.transparency = 1.0;
     cfg.shaderName = NULL;
     cfg.fps = 30;
 
