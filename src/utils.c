@@ -16,7 +16,7 @@ float getDayProgress()
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
 
-  dp = timeinfo->tm_hour + (float)timeinfo->tm_min / 60 + (float)timeinfo->tm_sec / 3600;
+  dp = (float)timeinfo->tm_hour / 24 + (float)timeinfo->tm_min / (24 * 60) + (float)timeinfo->tm_sec / (24 * 60 * 60);
 
 	return dp;
 }

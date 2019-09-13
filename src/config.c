@@ -98,12 +98,12 @@ char* getConfigRoot()
   if ((configroot = getenv("XDG_CONFIG_HOME")) == NULL) {
     char* home = getHomeDir();
     char* buf = (char*)malloc((strlen(home) + strlen("/.config")) * sizeof(char));
-    sprintf(buf, "%s%s", home, "/.config"); 
+    sprintf(buf, "%s/.config", home); 
     configroot = buf;
   }
 
   char* configdir = (char*)malloc((strlen(configroot) + strlen("/xglbg")) * sizeof(char));
-  sprintf(configdir, "%s%s", configroot, "/xglbg");
+  sprintf(configdir, "%s/xglbg", configroot);
 
   // create if not exsists
   struct stat st = {0};
@@ -117,10 +117,32 @@ char* getConfigRoot()
 
 char* getShaderDir()
 {
-  return getConfigRoot();
+  char* configroot = getConfigRoot();
+  char* shaderdir = (char*)malloc((strlen(configroot) + strlen("/shaders")) * sizeof(char));
+  sprintf(shaderdir, "%s/shaders", configroot);
+
+  // create if not exsists
+  struct stat st = {0};
+
+  if (stat(shaderdir, &st) == -1) {
+    mkdir(shaderdir, 0755);
+  }
+
+  return shaderdir;
 }
 
 char* getImageDir()
 {
-  return getConfigRoot();
+  char* configroot = getConfigRoot();
+  char* imagedir = (char*)malloc((strlen(configroot) + strlen("/images")) * sizeof(char));
+  sprintf(imagedir, "%s/images", configroot);
+
+  // create if not exsists
+  struct stat st = {0};
+
+  if (stat(imagedir, &st) == -1) {
+    mkdir(imagedir, 0755);
+  }
+
+  return imagedir;
 }

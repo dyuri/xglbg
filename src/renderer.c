@@ -69,6 +69,8 @@ renderer *init_rend()
   if (cfg.debug) {
     printf("DayProgress: %f\n", getDayProgress());
     printf("Config dir: %s\n", getConfigRoot());
+    printf("Image dir: %s\n", getImageDir());
+    printf("Shader dir: %s\n", getShaderDir());
   }
 
   return r;
@@ -126,6 +128,40 @@ void linkBuffers(renderer *r)
   glUseProgram(r->progText);
 }
 
+void updateImgInfo(renderer* r) {
+  r->imgInfo.dayProgress = getDayProgress();
+
+  // Load image if toggled
+  if (r->imgInfo.newImg) {
+    stbi_set_flip_vertically_on_load(true);
+    char* imgName = (char*)malloc((strlen(r->imgInfo.imageDir) + strlen("/image.png") + 2) * sizeof(char));
+    sprintf(imgName, "%s/image.png", r->imgInfo.imageDir);
+    r->imgInfo.image = stbi_load(imgName, &r->imgInfo.width, &r->imgInfo.height, &r->imgInfo.nrChannels, 0);
+
+    if (r->imgInfo.image) {
+      glActiveTexture(GL_TEXTURE2);
+      glBindTexture(GL_TEXTURE_2D, r->image);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, r->imgInfo.width, r->imgInfo.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, r->imgInfo.image);
+      if (cfg.debug)
+        printf("Image loaded: %s [%d:%d @%d]\n", imgName, r->imgInfo.width, r->imgInfo.height, r->imgInfo.nrChannels);
+    } else {
+      if (cfg.debug)
+        printf("Couldn't load image\n");
+      glActiveTexture(GL_TEXTURE2);
+      glBindTexture(GL_TEXTURE_2D, r->image);
+
+      unsigned char tmp[4] = {255, 255, 255, 255};
+
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
+
+    }
+
+    r->imgInfo.newImg = false;
+    stbi_image_free(r->imgInfo.image);
+  }
+
+}
+
 void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize)
 {
   // Clear screen
@@ -147,39 +183,14 @@ void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize)
   glBindTexture(GL_TEXTURE_1D, r->audioFFT);
   glTexImage1D(GL_TEXTURE_1D, 0, GL_R16, buffSize/2+1, 0, GL_RED, GL_FLOAT, fftBuff);
 
-  // Load album art if toggled
-  if (r->imgInfo.newImg) {
-    stbi_set_flip_vertically_on_load(true);
-    r->imgInfo.image = stbi_load("image.png", &r->imgInfo.width, &r->imgInfo.height, &r->imgInfo.nrChannels, 0);
-
-    if (r->imgInfo.image) {
-      glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, r->image);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, r->imgInfo.width, r->imgInfo.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, r->imgInfo.image);
-      if (cfg.debug)
-        printf("Image loaded: %d:%d @%d\n", r->imgInfo.width, r->imgInfo.height, r->imgInfo.nrChannels);
-    } else {
-      if (cfg.debug)
-        printf("Couldn't load image\n");
-      glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, r->image);
-
-      unsigned char tmp[4] = {255, 255, 255, 255};
-
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
-
-    }
-
-    r->imgInfo.newImg = false;
-    stbi_image_free(r->imgInfo.image);
-  }
+  updateImgInfo(r);
 
   // Set uniforms for shaders
   GLint timeLoc = glGetUniformLocation(r->progID, "time");
   if (timeLoc != -1) glUniform1f(timeLoc, getUnixTime());
 
   GLint dayProgLoc = glGetUniformLocation(r->progID, "dayprogress");
-  if (dayProgLoc != -1) glUniform1f(dayProgLoc, getDayProgress());
+  if (dayProgLoc != -1) glUniform1f(dayProgLoc, r->imgInfo.dayProgress);
 
   GLint resolutionLoc = glGetUniformLocation(r->progID, "resolution");
   if (resolutionLoc != -1) glUniform2f(resolutionLoc, (float)r->win->width, (float)r->win->height);

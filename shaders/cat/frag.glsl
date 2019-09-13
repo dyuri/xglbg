@@ -53,7 +53,7 @@ void main() {
 			bgcolor = texture(image, p);
 		else {
 			float r = texSize.y / texSize.x * xx;
-			bgcolor = texture(image, vec2(p.x * r + (1.0 - r) / 2.0, p.y)) * fract(dayprogress * 30);
+			bgcolor = texture(image, vec2(p.x * r + (1.0 - r) / 2.0, p.y)) * fract(dayprogress * 60 * 24);
 		}
 	
     }

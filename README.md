@@ -67,7 +67,7 @@ Second monitor: ```./liveW -g 2560x1440 -o 2560x0```
    #version 430
    uniform vec2 resolution;
    uniform float time;
-   uniform float dayprogress; // progress of day - hours, from 0.0 to 23.999*
+   uniform float dayprogress; // progress of day - from 0.0 to 1.0
    uniform sampler1D samples;
    uniform sampler1D fft;
    uniform sampler2D image; // background image

@@ -13,6 +13,8 @@ typedef struct ImgInfo {
   bool newImg;
   int width, height, nrChannels;
   unsigned char *image;
+  char *imageDir;
+  float dayProgress;
 
   int *cont;
 } ImgInfo;
