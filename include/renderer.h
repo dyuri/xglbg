@@ -11,7 +11,7 @@
 
 typedef struct renderer {
   xwin *win;
-  GLuint progID, progText;
+  GLuint progID;
   GLuint audioSamples;
   GLuint audioFFT;
   GLXContext ctx;

@@ -124,8 +124,6 @@ void linkBuffers(renderer *r)
   glUniform1i(glGetUniformLocation(r->progID, "image"), 2);
 
   checkErrors("Linking textures");
-
-  glUseProgram(r->progText);
 }
 
 void updateImgInfo(renderer* r) {

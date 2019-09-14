@@ -30,85 +30,92 @@ void checkCompileErrors(unsigned int shader, const char *type);
 
 GLuint loadShaders(const char *vertPath, const char *fragPath)
 {
-    GLuint prog = glCreateProgram();
-    GLuint vert = glCreateShader(GL_VERTEX_SHADER);
-    GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
+  GLuint prog = glCreateProgram();
+  GLuint vert = glCreateShader(GL_VERTEX_SHADER);
+  GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
 
-    char *vertCode;
-    char *fragCode;
-    int vertSize = 0;
-    int fragSize = 0;
+  char *vertCode;
+  char *fragCode;
+  int vertSize = 0;
+  int fragSize = 0;
 
-    FILE* vertFile = fopen(vertPath, "r");
-    if (vertFile) {
-        fseek(vertFile, 0, SEEK_END);
-        vertSize = ftell(vertFile);
-        fseek(vertFile, 0, SEEK_SET);
+  FILE* vertFile = fopen(vertPath, "r");
+  if (vertFile) {
+    fseek(vertFile, 0, SEEK_END);
+    vertSize = ftell(vertFile);
+    fseek(vertFile, 0, SEEK_SET);
 
-	vertCode = (char *)malloc(vertSize + 1);
-        fread(vertCode, vertSize, 1, vertFile);
-    } else {
-	if (cfg.debug)
-        	printf("Couldn't load vertex file using default code\n");
-        vertCode = (char *)vertCodeDef;
-	vertSize = strlen(vertCode);
-    }
+    vertCode = (char *)malloc(vertSize + 1);
+    fread(vertCode, vertSize, 1, vertFile);
 
-    FILE* fragFile = fopen(fragPath, "r");
-    if (fragFile) {
-        fseek(fragFile, 0, SEEK_END);
-        fragSize = ftell(fragFile);
-        fseek(fragFile, 0, SEEK_SET);
+    if (cfg.debug)
+      printf("Vertex shader loaded from: %s\n", vertPath);
+  } else {
+    if (cfg.debug)
+      printf("Couldn't load vertex shader (%s), using default code\n", vertPath);
 
-        fragCode = (char *)malloc(fragSize + 1);
-        fread(fragCode, fragSize, 1, fragFile);
-    } else {
-	if (cfg.debug)
-        	printf("Couldn't load fragment file using default code\n");
-        fragCode = (char *)fragCodeDef;
-	fragSize = strlen(fragCode);
-    }
+    vertCode = (char *)vertCodeDef;
+    vertSize = strlen(vertCode);
+  }
 
-    glShaderSource(vert, 1, (const char **)&vertCode, &vertSize);
-    glShaderSource(frag, 1, (const char **)&fragCode, &fragSize);
+  FILE* fragFile = fopen(fragPath, "r");
+  if (fragFile) {
+    fseek(fragFile, 0, SEEK_END);
+    fragSize = ftell(fragFile);
+    fseek(fragFile, 0, SEEK_SET);
 
-    glCompileShader(vert);
-    checkCompileErrors(vert, "VERTEX");
-    glAttachShader(prog, vert);
+    fragCode = (char *)malloc(fragSize + 1);
+    fread(fragCode, fragSize, 1, fragFile);
 
-    glCompileShader(frag);
-    checkCompileErrors(frag, "FRAGMENT");
-    glAttachShader(prog, frag);
+    if (cfg.debug)
+      printf("Fragment shader loaded from: %s\n", fragPath);
+  } else {
+    if (cfg.debug)
+      printf("Couldn't load fragment shader (%s), using default code\n", fragPath);
+    fragCode = (char *)fragCodeDef;
+    fragSize = strlen(fragCode);
+  }
 
-    glBindFragDataLocation(prog, 0, "color");
-    glLinkProgram(prog);
-    checkCompileErrors(prog, "PROGRAM");
+  glShaderSource(vert, 1, (const char **)&vertCode, &vertSize);
+  glShaderSource(frag, 1, (const char **)&fragCode, &fragSize);
 
-    return prog;
+  glCompileShader(vert);
+  checkCompileErrors(vert, "VERTEX");
+  glAttachShader(prog, vert);
+
+  glCompileShader(frag);
+  checkCompileErrors(frag, "FRAGMENT");
+  glAttachShader(prog, frag);
+
+  glBindFragDataLocation(prog, 0, "color");
+  glLinkProgram(prog);
+  checkCompileErrors(prog, "PROGRAM");
+
+  return prog;
 }
 
 void checkCompileErrors(unsigned int shader, const char *type)
 {
-    int success;
-    char infoLog[1024];
-    if (strcmp(type, "PROGRAM"))
+  int success;
+  char infoLog[1024];
+  if (strcmp(type, "PROGRAM"))
+  {
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success)
     {
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            printf("ERROR::SHADER_COMPILATION_ERROR of type: %s\n%s\n", type, infoLog);
-        }
+      glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+      printf("ERROR::SHADER_COMPILATION_ERROR of type: %s\n%s\n", type, infoLog);
     }
-    else
+  }
+  else
+  {
+    glGetProgramiv(shader, GL_LINK_STATUS, &success);
+    if (!success)
     {
-        glGetProgramiv(shader, GL_LINK_STATUS, &success);
-        if (!success)
-        {
-            glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            printf("ERROR::SHADER_LINKING_ERROR of type: %s\n%s\n", type, infoLog);
-        }
+      glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+      printf("ERROR::SHADER_LINKING_ERROR of type: %s\n%s\n", type, infoLog);
     }
+  }
 }
 
 #endif

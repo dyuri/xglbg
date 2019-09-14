@@ -40,15 +40,13 @@ int main(int argc, char *argv[])
     // Load shaders
     char *vertPath = NULL, *fragPath = NULL;
     if (cfg.shaderName) {
-        vertPath = (char*)malloc((strlen("shaders//vert.glsl") + strlen(cfg.shaderName)) * sizeof(char));
-        fragPath = (char*)malloc((strlen("shaders//frag.glsl") + strlen(cfg.shaderName)) * sizeof(char));
-        sprintf(vertPath, "shaders/%s/vert.glsl", cfg.shaderName);
-        sprintf(fragPath, "shaders/%s/frag.glsl", cfg.shaderName);
+      char *shaderRoot = getShaderDir();
+      vertPath = (char*)malloc((strlen(shaderRoot) + strlen("//vert.glsl") + strlen(cfg.shaderName)) * sizeof(char));
+      fragPath = (char*)malloc((strlen(shaderRoot) + strlen("//frag.glsl") + strlen(cfg.shaderName)) * sizeof(char));
+      sprintf(vertPath, "%s/%s/vert.glsl", shaderRoot, cfg.shaderName);
+      sprintf(fragPath, "%s/%s/frag.glsl", shaderRoot, cfg.shaderName);
     }
     rend->progID = loadShaders(vertPath, fragPath);
-
-    // Load text shaders
-    rend->progText = loadShaders("shaders/text/vert.glsl", "shaders/text/frag.glsl");
 
     // Configure fft
     ctx = calloc(1, sizeof(struct pa_fft));

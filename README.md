@@ -1,25 +1,22 @@
-# liveW
-Live background wallpaper in opengl for i3(and Plasma). It's made for shaders from [Shadertoy.com](shadertoy.com).
-Support with displaying currently playing song.
+# xglbg
+Live background wallpaper in opengl for X (i3). It's made for shaders from [Shadertoy.com](shadertoy.com).
 
-![Demo image](https://user-images.githubusercontent.com/10576958/49334904-72f67000-f5e1-11e8-953b-391d96ee373a.jpg)
+Started as a forkof [liveW](https://github.com/dgranosa/liveW.git), but I've removed a lot of features I don't need, and rewrote some parts.
 
 # Requirements:
  - Pulseaudio
  - FFTW
- - Freetype2
  - Compton (optional)
- - Playerctl (optional)
  
 # Compiling:
 ```
-git clone https://github.com/dgranosa/liveW.git
-cd liveW
+git clone https://github.com/dyuri/xglbg
+cd xglbg
 make
 ```
 
 # Using:
-$ ./liveW -s _source_ -p _shader_name_
+$ ./xglbg -s _source_ -p _shader_name_
 
 _source_ is name of Pulseaudio device which you can obtain with:
 ```
@@ -29,9 +26,11 @@ $ pacmd list-sources | grep "name:"
 ```
 You are intrested in one with .monitor on the end.
 
-_shader_name_ is name of the shaders folder inside folder `shaders/` in root directory of project.
+_shader_name_ is name of the shaders folder inside folder `/shaders/` in configuration directory.
 
-Example: ./liveW -s alsa_output.pci-0000_22_00.3.analog-stereo.monitor -p equalizer
+The configuration directory is `$XDG_CONFIG_HOME/xglbg` which is usually `$HOME/.config/xglbg`.
+
+Example: ./xglbg -s alsa_output.pci-0000_22_00.3.analog-stereo.monitor -p equalizer
 ```
 $ ./xglbg -h
   Usage: xglbg <options>                                                      
@@ -40,10 +39,10 @@ $ ./xglbg -h
      -d Turn debug on
      -k Plasma window setup
      -w Window mode
-     -g Geometry WIDTHxHEIGHT (default 800x600) 
-     -o Starting point TOPxLEFT (default 0x0)
+     -g Window geometry WIDTHxHEIGHT 
+     -o Position of window relative to top left corner TOPxLEFT (default 0x0)
      -t Transparency (default 1.0)
-     -p shader name in shaders folder 
+     -p shader name
      -f FPS (default 30)
      -D Dynamic FPS - use 1 fps if there is no sound
      -Y Use only youtube thumbnail for album art
@@ -52,15 +51,18 @@ $ ./xglbg -h
 ```
 
 # Multi monitor setup:
-In most multi monitor configurations all monitors are part of one X11 screen so maybe liveW will be strached through all monitors.
-To set liveW to draw on one monitor use arguments -g (set width and height of window) and -o (distance of top-left corner of window and top-left corner of screen).
+In most multi monitor configurations all monitors are part of one X11 screen so maybe `xglbg` will be strached through all monitors.
+To set `xglbg` to draw on one monitor use arguments -g (set width and height of window) and -o (distance of top-left corner of window and top-left corner of screen).
+
 ## Example:
-If you have two monitors vertically placed with resolution 2560x1440.
-First monitor: ```./liveW -g 2560x1440```
-Second monitor: ```./liveW -g 2560x1440 -o 2560x0```
+If you have two monitors vertically placed with resolution 1920x1200.
+
+First monitor: `./xglbg -g 1920x1200`
+
+Second monitor: `./xglbg -g 1920x1200 -o 1920x0`
 
 # Using shaders from Shadertoy:
-**NOTE: liveW have only support for music input for now**
+
   1. Create directory inside shaders/ and copy shader code in file frag.glsl inside created folder.
   2. Add to begining of the shader:
    ```glsl
