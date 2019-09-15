@@ -30,11 +30,12 @@ You are intrested in one with .monitor on the end.
 
 _shader_name_ is the name of the shaders folder inside `/shaders/` in the configuration directory.
 
-_image_theme_ is the name of the image theme folder inside `/images/` in the configuration directory. The `png` images in that directory will be loaded in alphabetical order based on the time of the day (`dayprogress`) and passed to the shader as `image` and `nextimage`. For example if you have 24 images (`image00.png`, `image01.png` ... `image23.png`) then at 10:20 `image10.png` will be loaded as `image` and `image11.png` will be `nextimage`.
+_image_theme_ is the name of the image theme folder inside `/images/` in the configuration directory. The images (PNG or JPG) in that directory will be loaded in alphabetical order based on the time of the day (`dayprogress`) and passed to the shader as `image` and `nextimage`. For example if you have 24 images (`image00.png`, `image01.png` ... `image23.png`) then at 10:20 `image10.png` will be loaded as `image` and `image11.png` will be `nextimage`.
 
 The configuration directory is `$XDG_CONFIG_HOME/xglbg` which is usually `$HOME/.config/xglbg`.
 
-Example: ./xglbg -s alsa_output.pci-0000_22_00.3.analog-stereo.monitor -p equalizer -i chaos
+Example: `./xglbg -s alsa_output.pci-0000_22_00.3.analog-stereo.monitor -p equalizer -i island`
+
 ```
 $ ./xglbg -h
   Usage: xglbg <options>                                                      
@@ -75,9 +76,11 @@ Second monitor: `./xglbg -g 1920x1200 -o 1920x0`
    uniform vec2 resolution;
    uniform float time;
    uniform float dayprogress; // progress of day - from 0.0 to 1.0
+   uniform float nrimages; // number of background images in rotation
    uniform sampler1D samples;
    uniform sampler1D fft;
    uniform sampler2D image; // background image
+   uniform sampler2D nextimage; // next background image
    out vec4 color;
    ```
   3. Rename possible colission between variables names from above inside code in something else.

@@ -146,7 +146,7 @@ void loadImage(ImgInfo* imgInfo, char* name, GLuint target, GLenum texture)
   if (image) {
     glActiveTexture(texture);
     glBindTexture(GL_TEXTURE_2D, target);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgInfo->width, imgInfo->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgInfo->width, imgInfo->height, 0, imgInfo->nrChannels == 3 ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, image);
     if (cfg.debug)
       printf("Image loaded: %s [%d:%d @%d]\n", imgName, imgInfo->width, imgInfo->height, imgInfo->nrChannels);
   } else {
@@ -212,6 +212,9 @@ void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize)
 
   GLint dayProgLoc = glGetUniformLocation(r->progID, "dayprogress");
   if (dayProgLoc != -1) glUniform1f(dayProgLoc, r->imgInfo.dayProgress);
+
+  GLint nrImagesLoc = glGetUniformLocation(r->progID, "nrimages");
+  if (nrImagesLoc != -1) glUniform1f(nrImagesLoc, r->imgInfo.imgNum);
 
   GLint resolutionLoc = glGetUniformLocation(r->progID, "resolution");
   if (resolutionLoc != -1) glUniform2f(resolutionLoc, (float)r->win->width, (float)r->win->height);

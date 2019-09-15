@@ -34,5 +34,5 @@ int endsWith(const char *str, const char *suffix)
 
 int isPng(const struct dirent *entry)
 {
-  return endsWith(entry->d_name, ".png");
+  return endsWith(entry->d_name, ".png") || endsWith(entry->d_name, ".jpg");
 }
