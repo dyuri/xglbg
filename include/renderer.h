@@ -17,21 +17,11 @@ typedef struct renderer {
   GLXContext ctx;
 
   GLuint image;
+  GLuint nextimage;
   ImgInfo imgInfo;
 } renderer;
 
 GLuint vertArray, posBuf;
-
-typedef struct character {
-  GLuint	textureID;
-  float	sizeX, sizeY;
-  float	bearingX, bearingY;
-  GLuint	advance;
-} character;
-
-character *characters[65536];
-
-GLuint VAO, VBO;
 
 renderer *init_rend();
 void linkBuffers(renderer *r);

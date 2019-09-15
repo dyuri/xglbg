@@ -2,6 +2,7 @@
 #include <pthread.h>
 #include <string.h>
 #include <locale.h>
+#include <dirent.h>
 
 #include "utils.h"
 #include "config.h"
@@ -48,6 +49,27 @@ int main(int argc, char *argv[])
     }
     rend->progID = loadShaders(vertPath, fragPath);
 
+    // Load image list
+    if (cfg.imageTheme) {
+      char *imageDir = getImageDir();
+      char *imageThemeDir = (char*)malloc((strlen(imageDir) + strlen(cfg.imageTheme) + 1) * sizeof(char));
+      sprintf(imageThemeDir, "%s/%s", imageDir, cfg.imageTheme);
+
+      if (cfg.debug)
+        printf("Image theme directory: %s\n", imageThemeDir);
+
+      rend->imgInfo.imgNum = scandir(imageThemeDir, &rend->imgInfo.imgList, isPng, alphasort);
+      if (cfg.debug) {
+        if (rend->imgInfo.imgNum < 0)
+          printf("Cannot list files in %s\n", imageThemeDir);
+        else {
+          for (int i=0; i<rend->imgInfo.imgNum; i++) {
+            printf("%s\n", rend->imgInfo.imgList[i]->d_name);
+          }
+        }
+      }
+    }
+
     // Configure fft
     ctx = calloc(1, sizeof(struct pa_fft));
     ctx->cont = 1;
@@ -55,7 +77,6 @@ int main(int argc, char *argv[])
     ctx->dev = cfg.src;
     ctx->rate = 44100;
     rend->imgInfo.cont = &ctx->cont;
-    rend->imgInfo.newImg = true;
     rend->imgInfo.imageDir = getImageDir();
 
     // Init pulseaudio && fft

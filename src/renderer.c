@@ -119,43 +119,66 @@ void linkBuffers(renderer *r)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+  glGenTextures(1, &r->nextimage);
+  glBindTexture(GL_TEXTURE_2D, r->nextimage);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
   glUniform1i(glGetUniformLocation(r->progID, "samples"), 0);
   glUniform1i(glGetUniformLocation(r->progID, "fft"), 1);
   glUniform1i(glGetUniformLocation(r->progID, "image"), 2);
+  glUniform1i(glGetUniformLocation(r->progID, "nextimage"), 3);
 
   checkErrors("Linking textures");
+}
+
+void loadImage(ImgInfo* imgInfo, char* name, GLuint target, GLenum texture)
+{
+  unsigned char *image;
+
+  stbi_set_flip_vertically_on_load(true);
+  char* imgName = (char*)malloc((strlen(imgInfo->imageDir) + strlen(cfg.imageTheme) + strlen(name) + 2) * sizeof(char));
+  sprintf(imgName, "%s/%s/%s", imgInfo->imageDir, cfg.imageTheme, name);
+  image = stbi_load(imgName, &imgInfo->width, &imgInfo->height, &imgInfo->nrChannels, 0);
+
+  if (image) {
+    glActiveTexture(texture);
+    glBindTexture(GL_TEXTURE_2D, target);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgInfo->width, imgInfo->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+    if (cfg.debug)
+      printf("Image loaded: %s [%d:%d @%d]\n", imgName, imgInfo->width, imgInfo->height, imgInfo->nrChannels);
+  } else {
+    if (cfg.debug)
+      printf("Couldn't load image\n");
+    glActiveTexture(texture);
+    glBindTexture(GL_TEXTURE_2D, target);
+
+    unsigned char tmp[4] = {255, 255, 255, 255};
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
+  }
+
+  stbi_image_free(image);
+  free(imgName);
 }
 
 void updateImgInfo(renderer* r) {
   r->imgInfo.dayProgress = getDayProgress();
 
+  int imgIdx = (int)(r->imgInfo.dayProgress * r->imgInfo.imgNum);
+
   // Load image if toggled
-  if (r->imgInfo.newImg) {
-    stbi_set_flip_vertically_on_load(true);
-    char* imgName = (char*)malloc((strlen(r->imgInfo.imageDir) + strlen("/image.png") + 2) * sizeof(char));
-    sprintf(imgName, "%s/image.png", r->imgInfo.imageDir);
-    r->imgInfo.image = stbi_load(imgName, &r->imgInfo.width, &r->imgInfo.height, &r->imgInfo.nrChannels, 0);
+  if (imgIdx != r->imgInfo.currentImgIdx) {
+    r->imgInfo.currentImgIdx = imgIdx;
+    int nextIdx = (imgIdx + 1) % r->imgInfo.imgNum;
 
-    if (r->imgInfo.image) {
-      glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, r->image);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, r->imgInfo.width, r->imgInfo.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, r->imgInfo.image);
-      if (cfg.debug)
-        printf("Image loaded: %s [%d:%d @%d]\n", imgName, r->imgInfo.width, r->imgInfo.height, r->imgInfo.nrChannels);
-    } else {
-      if (cfg.debug)
-        printf("Couldn't load image\n");
-      glActiveTexture(GL_TEXTURE2);
-      glBindTexture(GL_TEXTURE_2D, r->image);
+    if (cfg.debug)
+      printf("Image index: %d, next: %d\n", imgIdx, nextIdx);
 
-      unsigned char tmp[4] = {255, 255, 255, 255};
-
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
-
-    }
-
-    r->imgInfo.newImg = false;
-    stbi_image_free(r->imgInfo.image);
+    loadImage(&r->imgInfo, r->imgInfo.imgList[imgIdx]->d_name, r->image, GL_TEXTURE2);
+    loadImage(&r->imgInfo, r->imgInfo.imgList[nextIdx]->d_name, r->nextimage, GL_TEXTURE3);
   }
 
 }

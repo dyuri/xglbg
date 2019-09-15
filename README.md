@@ -1,7 +1,7 @@
 # xglbg
 Live background wallpaper in opengl for X (i3). It's made for shaders from [Shadertoy.com](shadertoy.com).
 
-Started as a forkof [liveW](https://github.com/dgranosa/liveW.git), but I've removed a lot of features I don't need, and rewrote some parts.
+Started as a fork of [liveW](https://github.com/dgranosa/liveW.git), but I've removed a lot of features I don't need, and rewrote some parts.
 
 # Requirements:
  - Pulseaudio
@@ -16,7 +16,9 @@ make
 ```
 
 # Using:
-$ ./xglbg -s _source_ -p _shader_name_
+```
+$ ./xglbg -s _source_ -p _shader_name_ -i _image_theme_
+```
 
 _source_ is name of Pulseaudio device which you can obtain with:
 ```
@@ -26,11 +28,13 @@ $ pacmd list-sources | grep "name:"
 ```
 You are intrested in one with .monitor on the end.
 
-_shader_name_ is name of the shaders folder inside folder `/shaders/` in configuration directory.
+_shader_name_ is the name of the shaders folder inside `/shaders/` in the configuration directory.
+
+_image_theme_ is the name of the image theme folder inside `/images/` in the configuration directory. The `png` images in that directory will be loaded in alphabetical order based on the time of the day (`dayprogress`) and passed to the shader as `image` and `nextimage`. For example if you have 24 images (`image00.png`, `image01.png` ... `image23.png`) then at 10:20 `image10.png` will be loaded as `image` and `image11.png` will be `nextimage`.
 
 The configuration directory is `$XDG_CONFIG_HOME/xglbg` which is usually `$HOME/.config/xglbg`.
 
-Example: ./xglbg -s alsa_output.pci-0000_22_00.3.analog-stereo.monitor -p equalizer
+Example: ./xglbg -s alsa_output.pci-0000_22_00.3.analog-stereo.monitor -p equalizer -i chaos
 ```
 $ ./xglbg -h
   Usage: xglbg <options>                                                      
@@ -42,7 +46,8 @@ $ ./xglbg -h
      -g Window geometry WIDTHxHEIGHT 
      -o Position of window relative to top left corner TOPxLEFT (default 0x0)
      -t Transparency (default 1.0)
-     -p shader name
+     -p shader name in shaders folder
+     -i image theme in images folder
      -f FPS (default 30)
      -D Dynamic FPS - use 1 fps if there is no sound
      -Y Use only youtube thumbnail for album art
