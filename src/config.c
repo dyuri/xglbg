@@ -2,7 +2,7 @@
 
 void printHelp()
 {
-    printf("Usage: liveW <options>                                                      \n");
+    printf("Usage: xglbg <options>                                                      \n");
     printf("Options:                                                                    \n");
     printf("   -h Print help                                                            \n");
     printf("   -d Turn debug on                                                         \n");
