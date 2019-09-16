@@ -29,12 +29,18 @@ renderer *init_rend()
   }
 
   XTextProperty windowName;
-  windowName.value = (unsigned char *) "Live wallpaper";
+  windowName.value = (unsigned char *) "xglbg";
   windowName.encoding = XA_STRING;
   windowName.format = 8;
   windowName.nitems = strlen((char *) windowName.value);
 
   XSetWMName(r->win->display, r->win->window, &windowName);
+
+  XClassHint classHint;
+  classHint.res_name = "xglbg";
+  classHint.res_class = "xglbg";
+
+  XSetClassHint(r->win->display, r->win->window, &classHint);
 
   XMapWindow(r->win->display, r->win->window);
   glXMakeCurrent(r->win->display, r->win->window, r->ctx);
