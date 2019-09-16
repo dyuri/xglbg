@@ -13,6 +13,7 @@ void printHelp()
     printf("   -t Transparency (default 1.0)                                            \n");
     printf("   -p shader name in shaders folder                                         \n");
     printf("   -i image theme in images folder                                          \n");
+    printf("   -S image change speed (default 1.0)                                      \n");
     printf("   -f FPS (default 30)                                                      \n");
     printf("   -D Dynamic FPS - use 1 FPS if there is no sound                          \n");
     printf("   -s Pulseaudio device source                                              \n");
@@ -33,10 +34,11 @@ bool parseArgs(int argc, char *argv[])
     cfg.transparency = 1.0;
     cfg.shaderName = NULL;
     cfg.imageTheme = NULL;
+    cfg.imageSpeed = 1.0;
     cfg.fps = 30;
 
     char c;
-    const char *opt_str = "hdkwDYs:t:g:o:f:p:i:F:";
+    const char *opt_str = "hdkwDYs:t:g:o:f:p:i:F:S:";
     while ((c = getopt(argc, argv, opt_str)) != -1) {
         switch (c) {
             case 'h':
@@ -71,6 +73,9 @@ bool parseArgs(int argc, char *argv[])
                 break;
             case 'i':
                 cfg.imageTheme = strdup(optarg);
+                break;
+            case 'S':
+                sscanf(optarg, "%f", &cfg.imageSpeed);
                 break;
             case 'f':
                 sscanf(optarg, "%u", &cfg.fps);

@@ -18,6 +18,7 @@ typedef struct ImgInfo {
   int currentImgIdx;
 
   float dayProgress;
+  float imageProgress;
 
   int *cont;
 } ImgInfo;

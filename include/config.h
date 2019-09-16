@@ -21,6 +21,7 @@ struct config {
     float transparency;
     char *shaderName;
     char *imageTheme;
+    float imageSpeed;
     unsigned int fps;
     bool dontDrawIfNoSound;
 } cfg;

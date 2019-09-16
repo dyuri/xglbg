@@ -49,6 +49,7 @@ $ ./xglbg -h
      -t Transparency (default 1.0)
      -p shader name in shaders folder
      -i image theme in images folder
+     -S image change speed (default 1.0)
      -f FPS (default 30)
      -D Dynamic FPS - use 1 fps if there is no sound
      -Y Use only youtube thumbnail for album art
@@ -76,6 +77,7 @@ Second monitor: `./xglbg -g 1920x1200 -o 1920x0`
    uniform vec2 resolution;
    uniform float time;
    uniform float dayprogress; // progress of day - from 0.0 to 1.0
+   uniform float imageprogress; // progress of images - from 0.0 to 1.0
    uniform float nrimages; // number of background images in rotation
    uniform sampler1D samples;
    uniform sampler1D fft;

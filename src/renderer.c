@@ -167,7 +167,11 @@ void loadImage(ImgInfo* imgInfo, char* name, GLuint target, GLenum texture)
 void updateImgInfo(renderer* r) {
   r->imgInfo.dayProgress = getDayProgress();
 
-  int imgIdx = (int)(r->imgInfo.dayProgress * r->imgInfo.imgNum);
+  float progress = r->imgInfo.dayProgress * r->imgInfo.imgNum * cfg.imageSpeed;
+  int imgIdx = (int)progress;
+  r->imgInfo.imageProgress = progress - imgIdx;
+
+  imgIdx = imgIdx % r->imgInfo.imgNum;
 
   // Load image if toggled
   if (imgIdx != r->imgInfo.currentImgIdx) {
@@ -212,6 +216,9 @@ void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize)
 
   GLint dayProgLoc = glGetUniformLocation(r->progID, "dayprogress");
   if (dayProgLoc != -1) glUniform1f(dayProgLoc, r->imgInfo.dayProgress);
+
+  GLint imageProgLoc = glGetUniformLocation(r->progID, "imageprogress");
+  if (imageProgLoc != -1) glUniform1f(imageProgLoc, r->imgInfo.imageProgress);
 
   GLint nrImagesLoc = glGetUniformLocation(r->progID, "nrimages");
   if (nrImagesLoc != -1) glUniform1f(nrImagesLoc, r->imgInfo.imgNum);
