@@ -167,7 +167,6 @@ void loadImage(ImgInfo* imgInfo, char* name, GLuint target, GLenum texture)
   }
 
   stbi_image_free(image);
-  free(imgName);
 }
 
 void updateImgInfo(renderer* r) {
