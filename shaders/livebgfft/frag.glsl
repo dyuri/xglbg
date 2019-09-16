@@ -1,6 +1,6 @@
 #version 430
 
-#define NUMBARS 64
+#define NUMBARS 100
 
 uniform vec2 resolution;
 uniform float time;
@@ -18,7 +18,8 @@ void main()
   vec4 bg = texture(image, uv) * (1. - imageprogress) +
              texture(nextimage, uv) * imageprogress;
 
-  float f = .5 * (texelFetch(fft, int(uv.x * NUMBARS), 0).r - .5);
+  float f = texelFetch(fft, int(uv.x * NUMBARS), 0).r;
+  float fc = .5 * (f - .5);
   
-  color = vec4(f) + bg;
+  color = vec4(vec3(1. - step(f, uv.y)) * fc, 1.0) + bg;
 }
