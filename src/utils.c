@@ -9,14 +9,17 @@ float getUnixTime()
 
 float getDayProgress()
 {
-	time_t rawtime;
 	struct tm * timeinfo;
   float dp;
 
-	time(&rawtime);
+	struct timeval tv;
+  time_t rawtime;
+	gettimeofday(&tv, 0);
+
+  rawtime = (time_t)tv.tv_sec;
 	timeinfo = localtime(&rawtime);
 
-  dp = (float)timeinfo->tm_hour / 24 + (float)timeinfo->tm_min / (24 * 60) + (float)timeinfo->tm_sec / (24 * 60 * 60);
+  dp = (float)timeinfo->tm_hour / 24 + (float)timeinfo->tm_min / (24 * 60) + (float)timeinfo->tm_sec / (24 * 60 * 60) + (float)tv.tv_usec / (24 * 60 * 60 * 1.0e6);
 
 	return dp;
 }
