@@ -5,6 +5,7 @@
 uniform vec2 resolution;
 uniform float time;
 uniform float imageprogress;
+uniform int nosound;
 uniform sampler2D image;
 uniform sampler2D nextimage;
 uniform sampler1D fft;
@@ -21,5 +22,5 @@ void main()
   float f = texelFetch(fft, int(uv.x * NUMBARS), 0).r;
   float fc = .5 * (f - .5);
   
-  color = vec4(vec3(1. - step(f, uv.y)) * fc, 1.0) + bg;
+  color = vec4(vec3(1. - step(f, uv.y)) * fc, 1.0) * (1. - float(nosound)) + bg;
 }

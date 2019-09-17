@@ -93,11 +93,10 @@ int main(int argc, char *argv[])
     unsigned int fps = cfg.fps;
 
     while(ctx->cont) {
-        render(rend, ctx->pa_output, ctx->fft_output, ctx->samples);
-
-        // Doesn't render if there is no sound
+        // Use 1 fps if there is no sound
+        bool noNewSound = false;
         if (cfg.dontDrawIfNoSound) {
-          bool noNewSound = true;
+          noNewSound = true;
           for (int i = 0; i < ctx->samples; i++)
             if (*(ctx->pa_output + i))
               noNewSound = false;
@@ -108,6 +107,8 @@ int main(int argc, char *argv[])
             fps = cfg.fps;
           }
         }
+
+        render(rend, ctx->pa_output, ctx->fft_output, ctx->samples, noNewSound);
 
         usleep(1000000 / fps);
     }

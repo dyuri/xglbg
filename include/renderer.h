@@ -25,6 +25,6 @@ GLuint vertArray, posBuf;
 
 renderer *init_rend();
 void linkBuffers(renderer *r);
-void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize);
+void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize, bool noNewSound);
 
 #endif

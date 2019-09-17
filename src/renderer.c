@@ -192,7 +192,7 @@ void updateImgInfo(renderer* r) {
 
 }
 
-void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize)
+void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize, bool noNewSound)
 {
   // Clear screen
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -216,6 +216,9 @@ void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize)
   updateImgInfo(r);
 
   // Set uniforms for shaders
+  GLint noSoundLoc = glGetUniformLocation(r->progID, "nosound");
+  if (noSoundLoc != -1) glUniform1i(noSoundLoc, noNewSound);
+
   GLint timeLoc = glGetUniformLocation(r->progID, "time");
   if (timeLoc != -1) glUniform1f(timeLoc, getUnixTime());
 
