@@ -15,12 +15,23 @@ cd xglbg
 make
 ```
 
-# Using:
+# Initial config:
+
+The following command copies the included images and shaders into the configuration folder (`$XDG_CONFIG_HOME/xglbg`):
 ```
-$ ./xglbg -s _source_ -p _shader_name_ -i _image_theme_
+make config
 ```
 
-_source_ is name of Pulseaudio device which you can obtain with:
+# Using:
+```
+$ ./xglbg -p _shader_name_ -i _image_theme_
+```
+
+_shader_name_ is the name of the shaders folder inside `/shaders/` in the configuration directory.
+
+_image_theme_ is the name of the image theme folder inside `/images/` in the configuration directory. The images (PNG or JPG) in that directory will be loaded in alphabetical order based on the time of the day (`dayprogress`) and passed to the shader as `image` and `nextimage`. For example if you have 24 images (`image00.png`, `image01.png` ... `image23.png`) then at 10:20 `image10.png` will be loaded as `image` and `image11.png` will be `nextimage`.
+
+With `-s _source_` you can specify a Pulseaudio device to use, which you can obtain with:
 ```
 $ pacmd list-sources | grep "name:"
   name: <alsa_output.pci-0000_22_00.3.analog-stereo.monitor>
@@ -28,23 +39,19 @@ $ pacmd list-sources | grep "name:"
 ```
 You are intrested in one with .monitor on the end.
 
-_shader_name_ is the name of the shaders folder inside `/shaders/` in the configuration directory.
-
-_image_theme_ is the name of the image theme folder inside `/images/` in the configuration directory. The images (PNG or JPG) in that directory will be loaded in alphabetical order based on the time of the day (`dayprogress`) and passed to the shader as `image` and `nextimage`. For example if you have 24 images (`image00.png`, `image01.png` ... `image23.png`) then at 10:20 `image10.png` will be loaded as `image` and `image11.png` will be `nextimage`.
-
 The configuration directory is `$XDG_CONFIG_HOME/xglbg` which is usually `$HOME/.config/xglbg`.
 
 Example: `./xglbg -s alsa_output.pci-0000_22_00.3.analog-stereo.monitor -p equalizer -i island`
 
 ```
 $ ./xglbg -h
-  Usage: xglbg <options>                                                      
-  Options:                                                                    
+  Usage: xglbg <options>
+  Options:
      -h Print help
      -d Turn debug on
      -k Plasma window setup
      -w Window mode
-     -g Window geometry WIDTHxHEIGHT 
+     -g Window geometry WIDTHxHEIGHT
      -o Position of window relative to top left corner TOPxLEFT (default 0x0)
      -t Transparency (default 1.0)
      -p shader name in shaders folder
@@ -92,9 +99,3 @@ Second monitor: `./xglbg -g 1920x1200 -o 1920x0`
      - fragColor -> color
      - iTime -> time
      - void mainImage( in, out ) -> void main()
-  5. If using music input replace code:
-     - texture(iChannel0, vec2(coordX, coordY)).x;
-     - If coordY is smaller then 0.5 replace with:
-       - texture(fft, coordX).x;
-     - otherwise
-       - texture(samples, coordX).x;
