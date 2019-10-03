@@ -8,23 +8,24 @@
 #include "opengl.h"
 
 static const char *vertCodeDef =
-        "#version 430\n\
-        in vec2 pos;\
-        void main() {\
-                gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);\
-        }";
+  "#version 430\n\
+  in vec2 pos;\
+  void main() {\
+    gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);\
+  }";
 
 static const char *fragCodeDef =
-        "#version 430\n\
-        uniform vec2 resolution;\
-        uniform float time;\
-        uniform sampler1D samples;\
-        uniform sampler1D fft;\
-        out vec4 color;\
-        void main()\
-        {\
-                color = vec4(sin(time), cos(time / 2.0), 0.0, 0.6);\
-        }";
+  "#version 430\n\
+  uniform vec2 resolution;\
+  uniform float time;\
+  uniform sampler1D fft;\
+  out vec4 color;\
+  void main()\
+  {\
+    vec2 uv = gl_FragCoord.xy / resolution.xy;\
+    float f = texelFetch(fft, int(uv.x * 100), 0).r;\
+    color = vec4(sin(time), cos(time / 2.0), 1. - step(f, uv.y), 0.25);\
+  }";
 
 void checkCompileErrors(unsigned int shader, const char *type);
 
