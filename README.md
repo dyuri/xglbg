@@ -6,7 +6,6 @@ Started as a fork of [liveW](https://github.com/dgranosa/liveW.git), but I've re
 # Requirements:
  - Pulseaudio
  - FFTW
- - Compton (optional)
  
 # Compiling:
 ```
