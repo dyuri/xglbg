@@ -16,6 +16,7 @@ void printHelp()
     printf("   -S image change speed (default 1.0)                                      \n");
     printf("   -f FPS (default 30)                                                      \n");
     printf("   -D Dynamic FPS - use 1 FPS if there is no sound                          \n");
+    printf("   -m mono mode                                                             \n");
     printf("   -s Pulseaudio device source                                              \n");
     printf("      Specify using the name from \"pacmd list-sources | grep \"name:\"\"   \n");
 }
@@ -35,10 +36,11 @@ bool parseArgs(int argc, char *argv[])
     cfg.shaderName = NULL;
     cfg.imageTheme = NULL;
     cfg.imageSpeed = 1.0;
+    cfg.mono = false;
     cfg.fps = 30;
 
     char c;
-    const char *opt_str = "hdkwDYs:t:g:o:f:p:i:F:S:";
+    const char *opt_str = "hdkwmDYs:t:g:o:f:p:i:F:S:";
     while ((c = getopt(argc, argv, opt_str)) != -1) {
         switch (c) {
             case 'h':
@@ -53,6 +55,9 @@ bool parseArgs(int argc, char *argv[])
                 break;
             case 'w':
                 cfg.windowed = true;
+                break;
+            case 'm':
+                cfg.mono = true;
                 break;
             case 's':
                 cfg.src = strdup(optarg);

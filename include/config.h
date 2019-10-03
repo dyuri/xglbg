@@ -24,6 +24,7 @@ struct config {
     float imageSpeed;
     unsigned int fps;
     bool dontDrawIfNoSound;
+    bool mono;
 } cfg;
 
 void printHelp();

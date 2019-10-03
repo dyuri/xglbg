@@ -59,6 +59,7 @@ $ ./xglbg -h
      -S image change speed (default 1.0)
      -f FPS (default 30)
      -D Dynamic FPS - use 1 fps if there is no sound
+     -m mono mode
      -s Pulseaudio device source
         Specify using the name from "pacmd list-sources | grep "name:""
 ```
