@@ -1,7 +1,7 @@
 # xglbg
 Live background wallpaper in opengl for X (i3). It's made for shaders from [Shadertoy.com](shadertoy.com).
 
-Started as a fork of [liveW](https://github.com/dgranosa/liveW.git), but I've removed a lot of features I don't need, and rewrote some parts.
+Started as a fork of [liveW](https://github.com/dgranosa/liveW.git), but I've removed a lot of features I don't need, and rewrote some parts. Sound visualisation *inspired* by [cava](https://github.com/karlstav/cava).
 
 # Requirements:
  - Pulseaudio
