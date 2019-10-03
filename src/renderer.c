@@ -176,20 +176,21 @@ void updateImgInfo(renderer* r) {
   int imgIdx = (int)progress;
   r->imgInfo.imageProgress = progress - imgIdx;
 
-  imgIdx = imgIdx % r->imgInfo.imgNum;
+  if (r->imgInfo.imgNum) {
+    imgIdx = imgIdx % r->imgInfo.imgNum;
 
-  // Load image if toggled
-  if (imgIdx != r->imgInfo.currentImgIdx) {
-    r->imgInfo.currentImgIdx = imgIdx;
-    int nextIdx = (imgIdx + 1) % r->imgInfo.imgNum;
+    // Load image if toggled
+    if (imgIdx != r->imgInfo.currentImgIdx) {
+      r->imgInfo.currentImgIdx = imgIdx;
+      int nextIdx = (imgIdx + 1) % r->imgInfo.imgNum;
 
-    if (cfg.debug)
-      printf("Image index: %d, next: %d\n", imgIdx, nextIdx);
+      if (cfg.debug)
+        printf("Image index: %d, next: %d\n", imgIdx, nextIdx);
 
-    loadImage(&r->imgInfo, r->imgInfo.imgList[imgIdx]->d_name, r->image, GL_TEXTURE2);
-    loadImage(&r->imgInfo, r->imgInfo.imgList[nextIdx]->d_name, r->nextimage, GL_TEXTURE3);
+      loadImage(&r->imgInfo, r->imgInfo.imgList[imgIdx]->d_name, r->image, GL_TEXTURE2);
+      loadImage(&r->imgInfo, r->imgInfo.imgList[nextIdx]->d_name, r->nextimage, GL_TEXTURE3);
+    }
   }
-
 }
 
 void render(renderer *r, float *sampleBuff, float *fftBuff, int buffSize, bool noNewSound)
