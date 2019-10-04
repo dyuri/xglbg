@@ -3,6 +3,10 @@ Live background wallpaper in opengl for X (i3). It's made for shaders from [Shad
 
 Started as a fork of [liveW](https://github.com/dgranosa/liveW.git), but I've removed a lot of features I don't need, and rewrote some parts. Sound visualisation *inspired* by [cava](https://github.com/karlstav/cava).
 
+![Imgur](https://i.imgur.com/0IxH4UQ.png)
+
+[Gallery](https://imgur.com/gallery/WriGs3z)
+
 # Requirements:
  - Pulseaudio
  - FFTW
