@@ -13,6 +13,8 @@
 #include "opengl.h"
 #include "config.h"
 
+#define MAX_PROPERTY_VALUE_LEN 4096
+
 typedef struct xwin {
 	Display *display;
 	Window root;
@@ -26,12 +28,19 @@ typedef struct xwin {
 	XRenderPictFormat *pict;
 	Colormap cmap;
 
+  unsigned int window_count;
+  unsigned int desktop_count;
+  int current_desktop;
+  unsigned int current_desktop_window_count;
+
 	GLint offX, offY;
 	GLint width, height;
 } xwin;
 
 xwin *init_xwin();
 void swapBuffers();
+char *get_property (Display *disp, Window win, Atom xa_prop_type, char *prop_name, unsigned long *size);
+void update_window_list(xwin* win);
 
 #endif
 

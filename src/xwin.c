@@ -244,9 +244,85 @@ void initBackground(xwin *win)
 			win->vi->depth, InputOutput, win->vi->visual, mask, &win->swa);
 
 	XLowerWindow(win->display, win->window);
+
+  update_window_list(win);
 }
 
+char *get_property (Display *disp, Window win, Atom xa_prop_type, char *prop_name, unsigned long *size) {
+    Atom xa_prop_name;
+    Atom xa_ret_type;
+    int ret_format;
+    unsigned long ret_nitems;
+    unsigned long ret_bytes_after;
+    unsigned long tmp_size;
+    unsigned char *ret_prop;
+    char *ret;
+    
+    xa_prop_name = XInternAtom(disp, prop_name, False);
+    
+    /* MAX_PROPERTY_VALUE_LEN / 4 explanation (XGetWindowProperty manpage):
+     *
+     * long_length = Specifies the length in 32-bit multiples of the
+     *               data to be retrieved.
+     */
+    if (XGetWindowProperty(disp, win, xa_prop_name, 0, MAX_PROPERTY_VALUE_LEN / 4, False,
+            xa_prop_type, &xa_ret_type, &ret_format,     
+            &ret_nitems, &ret_bytes_after, &ret_prop) != Success) {
+        printf("Cannot get %s property.\n", prop_name);
+        return NULL;
+    }
+  
+    if (xa_ret_type != xa_prop_type) {
+        printf("Invalid type of %s property.\n", prop_name);
+        XFree(ret_prop);
+        return NULL;
+    }
 
+    // 32 means long, but most modern systems use 64bit longs
+    if (ret_format == 32) ret_format = 8 * sizeof(unsigned long);
+
+    tmp_size = (ret_format / 8) * ret_nitems;
+    ret = malloc(tmp_size + 1);
+    memcpy(ret, ret_prop, tmp_size);
+    /* null terminate the result to make string handling easier */
+    ret[tmp_size] = '\0';
+
+    if (size) {
+        *size = tmp_size;
+    }
+    
+    XFree(ret_prop);
+    return ret;
+}
+
+static Window *get_client_list (Display *disp, unsigned long *size) {
+    Window *client_list = NULL;
+
+    client_list = (Window *)get_property(disp, DefaultRootWindow(disp), XA_WINDOW, "_NET_CLIENT_LIST", size);
+
+    return client_list;
+}
+
+void update_window_list(xwin *win) {
+    // TODO: error handling
+    // get nr of desktops
+    win->desktop_count = *(unsigned int *)get_property(win->display, win->root, XA_CARDINAL, "_NET_NUMBER_OF_DESKTOPS", NULL);
+
+    // current desktop
+    win->current_desktop = *(int *)get_property(win->display, win->root, XA_CARDINAL, "_NET_CURRENT_DESKTOP", NULL);
+
+    // get window list
+    unsigned long client_list_size;
+    Window *client_list = get_client_list(win->display, &client_list_size);
+
+    // get window count of current desktop
+    win->current_desktop_window_count = 0;
+    win->window_count = client_list_size / sizeof(Window);
+    for (int i = 0; i < win->window_count; i++) {
+        int *desktop = (int *)get_property(win->display, client_list[i], XA_CARDINAL, "_NET_WM_DESKTOP", NULL);
+        if (*desktop == win->current_desktop) win->current_desktop_window_count++;
+    }
+}
 
 void swapBuffers(xwin *win) {
 	glXSwapBuffers(win->display, win->window);

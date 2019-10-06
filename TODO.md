@@ -1,3 +1,3 @@
 # TODO
 
-- make it awesome
+- check windows (see wmctrl) - for example blur if there's a window on the active desktop
