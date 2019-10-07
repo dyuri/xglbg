@@ -244,8 +244,6 @@ void initBackground(xwin *win)
 			win->vi->depth, InputOutput, win->vi->visual, mask, &win->swa);
 
 	XLowerWindow(win->display, win->window);
-
-  update_window_list(win);
 }
 
 char *get_property (Display *disp, Window win, Atom xa_prop_type, char *prop_name, unsigned long *size) {
