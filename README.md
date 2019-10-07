@@ -7,25 +7,37 @@ Started as a fork of [liveW](https://github.com/dgranosa/liveW.git), but I've re
 
 [Gallery](https://imgur.com/gallery/WriGs3z)
 
-# Requirements:
+# Requirements
  - Pulseaudio
  - FFTW
  
-# Compiling:
+# Compiling
 ```
-git clone https://github.com/dyuri/xglbg
-cd xglbg
-make
+$ git clone https://github.com/dyuri/xglbg
+$ cd xglbg
+$ make
 ```
 
-# Initial config:
+By default `clang` is used to compile the sources, but you can change that by setting the `COMPILER` environment variable. For example (using `gcc`):
+```
+$ COMPILER=gcc make
+```
+
+## Ubuntu
+
+The following packages are required to compile the project on Ubuntu:
+```
+$ sudo apt install mesa-common-dev libglu1-mesa-dev freeglut3-dev libxrender-dev libpulse-dev libfftw3-dev
+```
+
+# Initial config
 
 The following command copies the included images and shaders into the configuration folder (`$XDG_CONFIG_HOME/xglbg`):
 ```
 make config
 ```
 
-# Using:
+# Using
 ```
 $ ./xglbg -p _shader_name_ -i _image_theme_
 ```
@@ -67,18 +79,18 @@ $ ./xglbg -h
         Specify using the name from "pacmd list-sources | grep "name:""
 ```
 
-# Multi monitor setup:
+# Multi monitor setup
 In most multi monitor configurations all monitors are part of one X11 screen so maybe `xglbg` will be strached through all monitors.
 To set `xglbg` to draw on one monitor use arguments -g (set width and height of window) and -o (distance of top-left corner of window and top-left corner of screen).
 
-## Example:
+## Example
 If you have two monitors vertically placed with resolution 1920x1200.
 
 First monitor: `./xglbg -g 1920x1200`
 
 Second monitor: `./xglbg -g 1920x1200 -o 1920x0`
 
-# Using shaders from Shadertoy:
+# Using shaders from Shadertoy
 
   1. Create directory inside shaders/ and copy shader code in file frag.glsl inside created folder.
   2. Add to begining of the shader:

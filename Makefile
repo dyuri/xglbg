@@ -1,6 +1,9 @@
-XDG_CONFIG_HOME ?= $(HOME)/.config
+XDG_CONFIG_HOME?=$(HOME)/.config
+COMPILER?=clang
+CFLAGS=-g -Wall -Iinclude `pkg-config --cflags fftw3 --cflags glu --cflags xrender --cflags xfixes --cflags libpulse-simple`
+LDFLAGS=-lm `pkg-config --libs fftw3 --libs glu --libs xrender --libs xfixes --libs libpulse-simple`
 all:
-	clang -o xglbg src/* -Wall -Iinclude -lm -lpthread -lfftw3 -lpulse-simple -lpulse -lGL -lGLU -lX11 -lXrender -lXfixes -g
+	$(COMPILER) -o xglbg src/* $(CFLAGS) $(LDFLAGS)
 
 config:
 	mkdir -p $(XDG_CONFIG_HOME)/xglbg
