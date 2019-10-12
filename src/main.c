@@ -91,6 +91,9 @@ int main(int argc, char *argv[])
     pthread_create(&ctx->thread, NULL, pa_fft_thread, ctx);
 
     unsigned int fps = cfg.fps;
+    unsigned int fps_counter = 0;
+    float uxtime = getUnixTime();
+    float fps_timer = uxtime;
 
     while(ctx->cont) {
         // Use 1 fps if there is no sound
@@ -105,6 +108,17 @@ int main(int argc, char *argv[])
             fps = 1;
           } else {
             fps = cfg.fps;
+          }
+        }
+
+        if (cfg.debug) {
+          // fps display
+          fps_counter++;
+          uxtime = getUnixTime();
+          if (uxtime - fps_timer >= 1.0) {
+            printf("FPS: %d\n", fps_counter);
+            fps_timer = uxtime;
+            fps_counter = 0;
           }
         }
 
