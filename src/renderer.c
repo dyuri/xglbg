@@ -145,7 +145,7 @@ void loadImage(ImgInfo* imgInfo, char* name, GLuint target, GLenum texture)
   unsigned char *image;
 
   stbi_set_flip_vertically_on_load(true);
-  char* imgName = (char*)malloc((strlen(imgInfo->imageDir) + strlen(cfg.imageTheme) + strlen(name) + 2) * sizeof(char));
+  char* imgName = (char*)malloc((strlen(imgInfo->imageDir) + strlen(cfg.imageTheme) + strlen(name) + 5) * sizeof(char));
   sprintf(imgName, "%s/%s/%s", imgInfo->imageDir, cfg.imageTheme, name);
   image = stbi_load(imgName, &imgInfo->width, &imgInfo->height, &imgInfo->nrChannels, 0);
 
@@ -166,6 +166,7 @@ void loadImage(ImgInfo* imgInfo, char* name, GLuint target, GLenum texture)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
   }
 
+  free(imgName);
   stbi_image_free(image);
 }
 
