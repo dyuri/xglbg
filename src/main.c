@@ -96,14 +96,13 @@ int main(int argc, char *argv[])
     float fps_timer = uxtime;
 
     while(ctx->cont) {
-        // Use 1 fps if there is no sound
-        bool noNewSound = false;
-        if (cfg.dontDrawIfNoSound) {
-          noNewSound = true;
-          for (int i = 0; i < ctx->samples; i++)
-            if (*(ctx->pa_output + i))
-              noNewSound = false;
+        bool noNewSound = true;
+        for (int i = 0; i < ctx->samples; i++)
+          if (*(ctx->pa_output + i))
+            noNewSound = false;
 
+        // Use 1 fps if there is no sound
+        if (cfg.dontDrawIfNoSound) {
           if (noNewSound) {
             fps = 1;
           } else {
